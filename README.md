@@ -10,7 +10,6 @@ Swipable in both directions
 <a href="https://repo1.maven.org/maven2/de/charlex/compose/revealswipe/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose/revealswipe" alt="Maven Central" /></a>
 
 
-
 # Add to your project
 
 Add actual RevealSwipe library:
@@ -61,7 +60,6 @@ RevealCard(
     }
 }
 ```
-
 
 # Directions
 
