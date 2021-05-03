@@ -1,6 +1,5 @@
 package de.charlex.compose
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.SnapSpec
@@ -55,7 +54,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -199,8 +197,6 @@ fun RevealCard(
             alpha = alpha
         ) else backgroundCardStartColor
 
-
-
         // non swipable with hidden content
         Card(
             contentColor = backgroundCardContentColor,
@@ -239,7 +235,6 @@ fun RevealCard(
                 )
             }
         }
-
 
         CompositionLocalProvider(
             LocalContentColor provides contentColor,
@@ -437,7 +432,7 @@ fun RevealSwipegPreview() {
                             modifier = Modifier.fillMaxSize().requiredHeight(80.dp),
                             backgroundColor = Color(item.second),
                             shape = it,
-                        ){
+                        ) {
 
                             Text(
                                 modifier = Modifier.padding(start = 20.dp, top = 20.dp),
