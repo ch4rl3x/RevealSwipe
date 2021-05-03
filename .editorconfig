@@ -1,0 +1,3 @@
+[*.{kt,kts}]
+disabled_rules=no-wildcard-imports,import-ordering,indent
+indent_size=4 #Setting -> Editor -> Kotlin -> Tabs and Indents
