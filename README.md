@@ -64,13 +64,13 @@ RevealCard(
 # Directions
 
 ### EndToStart
-![RevealCard EndToStart](https://github.com/ch4rl3x/RevealCard/blob/main/art/revealswipe_end.gif)
+![RevealSwipe EndToStart](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe_end.gif)
 
 ### StartToEnd
-![RevealCard StartToEnd](https://github.com/ch4rl3x/RevealCard/blob/main/art/revealswipe_start.gif)
+![RevealSwipe StartToEnd](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe_start.gif)
 
 ### Both Directions
-![RevealCard Both](https://github.com/ch4rl3x/RevealCard/blob/main/art/revealswipe.gif)
+![RevealSwipe Both](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe.gif)
 
 
 
