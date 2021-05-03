@@ -72,7 +72,7 @@ typealias RevealState = SwipeableState<RevealValue>
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RevealCard(
+fun RevealSwipe(
     modifier: Modifier = Modifier,
     enableSwipe: Boolean = true,
     onContentClick: () -> Unit = {},
@@ -405,7 +405,7 @@ fun RevealSwipegPreview() {
                 contentPadding = PaddingValues(10.dp)
             ) {
                 items(dummyList) { item ->
-                    RevealCard(
+                    RevealSwipe(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                         backgroundCardModifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                         directions = setOf(

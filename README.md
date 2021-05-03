@@ -25,7 +25,7 @@ dependencies {
 Surround your content with the RevealSwipe
 
 ```kotlin
-RevealCard(
+RevealSwipe(
     modifier = Modifier.padding(vertical = 5.dp),
     backgroundCardModifier = Modifier.padding(vertical = 5.dp),
     directions = setOf(
