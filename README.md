@@ -79,7 +79,7 @@ That's it!
 License
 --------
 
-    Copyright 2020 Alexander Karkossa
+    Copyright 2021 Alexander Karkossa
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
