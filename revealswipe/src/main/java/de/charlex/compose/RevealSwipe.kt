@@ -91,7 +91,7 @@ fun RevealSwipe(
         RevealDirection.EndToStart
     ),
     contentColor: Color = MaterialTheme.colors.onPrimary,
-    backgroundCardModifier: Modifier = Modifier,
+    backgroundCardModifier: Modifier = modifier,
     backgroundCardElevation: Dp = 0.dp,
     backgroundCardStartColor: Color = MaterialTheme.colors.secondaryVariant,
     backgroundCardEndColor: Color = MaterialTheme.colors.secondary,
