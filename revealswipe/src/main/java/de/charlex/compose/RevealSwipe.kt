@@ -70,6 +70,13 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalMaterialApi::class)
 typealias RevealState = SwipeableState<RevealValue>
 
+/**
+ * Return an alternative value if whenClosure is true. Replaces if/else
+ */
+private fun <T> T.or(orValue: T, whenClosure: T.() -> Boolean): T {
+    return if(whenClosure()) orValue else this
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RevealSwipe(
@@ -163,10 +170,14 @@ fun RevealSwipe(
             kotlin.math.max(cornerRadiusTopEnd, cornerRadiusBottomEnd)
 
         val cornerFactorEnd =
-            (-state.offset.value / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f)
+            (-state.offset.value / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f).or(0f) {
+                directions.contains(RevealDirection.EndToStart).not()
+            }
 
         val cornerFactorStart =
-            (state.offset.value / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f)
+            (state.offset.value / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f).or(0f) {
+                directions.contains(RevealDirection.StartToEnd).not()
+            }
 
         val animatedCornerRadiusTopEnd: Float = lerp(cornerRadiusTopEnd, 0f, cornerFactorEnd)
         val animatedCornerRadiusBottomEnd: Float = lerp(cornerRadiusBottomEnd, 0f, cornerFactorEnd)
