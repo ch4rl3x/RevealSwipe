@@ -217,7 +217,7 @@ fun RevealSwipe(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .fillMaxHeight()
-                        .background(animatedBackgroundStartColor)
+                        .background(if (directions.contains(RevealDirection.StartToEnd)) animatedBackgroundStartColor else Color.Transparent)
                         .clickable(onClick = backgroundStartClick),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -227,7 +227,7 @@ fun RevealSwipe(
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .fillMaxHeight()
-                        .background(animatedBackgroundEndColor)
+                        .background(if (directions.contains(RevealDirection.EndToStart)) animatedBackgroundEndColor else Color.Transparent)
                         .clickable(onClick = backgroundEndClick),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
