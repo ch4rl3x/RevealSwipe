@@ -111,7 +111,7 @@ fun RevealSwipe(
         } else onContentClick()
     }
     val backgroundStartClick = {
-        if (state.targetValue == RevealValue.FullyRevealedStart && closeOnBackgroundClick) {
+        if (state.targetValue == RevealValue.FullyRevealedEnd && closeOnBackgroundClick) {
             coroutineScope.launch {
                 state.reset()
             }
@@ -120,7 +120,7 @@ fun RevealSwipe(
     }
 
     val backgroundEndClick = {
-        if (state.targetValue == RevealValue.FullyRevealedEnd && closeOnBackgroundClick) {
+        if (state.targetValue == RevealValue.FullyRevealedStart && closeOnBackgroundClick) {
             coroutineScope.launch {
                 state.reset()
             }
