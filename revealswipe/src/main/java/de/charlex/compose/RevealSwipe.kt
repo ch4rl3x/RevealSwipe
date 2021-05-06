@@ -390,24 +390,21 @@ suspend fun RevealState.resetFast() {
 
 @Preview
 @Composable
-fun RevealSwipegPreview() {
-    val dummyList = listOf(
-        Pair("Item 1", 0xFF505160),
-        Pair("Item 2", 0xFF68829E),
-        Pair("Item 3", 0xFFAEBD38),
-        Pair("Item 4", 0xFF598234)
-    )
+private fun RevealSwipegPreview() {
     MaterialTheme {
         Surface(
-            modifier = Modifier.width(400.dp).height(600.dp)
+            modifier = Modifier
+                .width(400.dp)
+                .height(400.dp)
         ) {
             LazyColumn(
                 contentPadding = PaddingValues(10.dp)
             ) {
-                items(dummyList) { item ->
+                item {
                     RevealSwipe(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
-                        backgroundCardModifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
                         directions = setOf(
                             RevealDirection.StartToEnd,
                             RevealDirection.EndToStart
@@ -429,14 +426,137 @@ fun RevealSwipegPreview() {
                         }
                     ) {
                         Card(
-                            modifier = Modifier.fillMaxSize().requiredHeight(80.dp),
-                            backgroundColor = Color(item.second),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .requiredHeight(80.dp),
+                            backgroundColor = Color(0xFF505160),
                             shape = it,
                         ) {
 
                             Text(
                                 modifier = Modifier.padding(start = 20.dp, top = 20.dp),
-                                text = item.first
+                                text = "Item 1"
+                            )
+                        }
+                    }
+                }
+                item {
+                    RevealSwipe(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
+                        closeOnContentClick = false,
+                        closeOnBackgroundClick = false,
+                        directions = setOf(
+                            RevealDirection.StartToEnd,
+                            RevealDirection.EndToStart
+                        ),
+                        hiddenContentStart = {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 25.dp),
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        },
+                        hiddenContentEnd = {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 25.dp),
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
+                        }
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .requiredHeight(80.dp),
+                            backgroundColor = Color(0xFF68829E),
+                            shape = it,
+                        ) {
+
+                            Text(
+                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
+                                text = "Item 2"
+                            )
+                        }
+                    }
+                }
+                item {
+                    RevealSwipe(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
+                        directions = setOf(
+                            RevealDirection.StartToEnd,
+                        ),
+                        hiddenContentStart = {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 25.dp),
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        },
+                        hiddenContentEnd = {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 25.dp),
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
+                        }
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .requiredHeight(80.dp),
+                            backgroundColor = Color(0xFFAEBD38),
+                            shape = it,
+                        ) {
+
+                            Text(
+                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
+                                text = "Item 3"
+                            )
+                        }
+                    }
+                }
+                item {
+                    RevealSwipe(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
+                        animateBackgroundCardColor = false,
+                        directions = setOf(
+                            RevealDirection.EndToStart,
+                        ),
+                        hiddenContentStart = {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 25.dp),
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        },
+                        hiddenContentEnd = {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 25.dp),
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
+                        }
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .requiredHeight(80.dp),
+                            backgroundColor = Color(0xFF598234),
+                            shape = it,
+                        ) {
+
+                            Text(
+                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
+                                text = "Item 4"
                             )
                         }
                     }
