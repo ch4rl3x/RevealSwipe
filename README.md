@@ -16,7 +16,7 @@ Add actual RevealSwipe library:
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:revealswipe:1.0.0-beta01'
+    implementation 'de.charlex.compose:revealswipe:1.0.0-beta02'
 }
 ```
 
@@ -27,7 +27,6 @@ Surround your content with the RevealSwipe
 ```kotlin
 RevealSwipe(
     modifier = Modifier.padding(vertical = 5.dp),
-    backgroundCardModifier = Modifier.padding(vertical = 5.dp),
     directions = setOf(
 //        RevealDirection.StartToEnd,
         RevealDirection.EndToStart
@@ -61,17 +60,9 @@ RevealSwipe(
 }
 ```
 
-# Directions
+# Preview
 
-### EndToStart
-![RevealSwipe EndToStart](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe_end.gif)
-
-### StartToEnd
-![RevealSwipe StartToEnd](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe_start.gif)
-
-### Both Directions
-![RevealSwipe Both](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe.gif)
-
+![RevealSwipe](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe.gif)
 
 
 That's it!

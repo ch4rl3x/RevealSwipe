@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -442,11 +443,14 @@ private fun RevealSwipegPreview() {
                             backgroundColor = Color(0xFF505160),
                             shape = it,
                         ) {
-
-                            Text(
-                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
-                                text = "Item 1"
-                            )
+                            Column(
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(start = 20.dp),
+                                    text = "Both directions"
+                                )
+                            }
                         }
                     }
                 }
@@ -484,11 +488,14 @@ private fun RevealSwipegPreview() {
                             backgroundColor = Color(0xFF68829E),
                             shape = it,
                         ) {
-
-                            Text(
-                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
-                                text = "Item 2"
-                            )
+                            Column(
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(start = 20.dp),
+                                    text = "Both directions.\ncloseOnClick = false"
+                                )
+                            }
                         }
                     }
                 }
@@ -523,11 +530,14 @@ private fun RevealSwipegPreview() {
                             backgroundColor = Color(0xFFAEBD38),
                             shape = it,
                         ) {
-
-                            Text(
-                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
-                                text = "Item 3"
-                            )
+                            Column(
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(start = 20.dp),
+                                    text = "StartToEnd"
+                                )
+                            }
                         }
                     }
                 }
@@ -563,11 +573,14 @@ private fun RevealSwipegPreview() {
                             backgroundColor = Color(0xFF598234),
                             shape = it,
                         ) {
-
-                            Text(
-                                modifier = Modifier.padding(start = 20.dp, top = 20.dp),
-                                text = "Item 4"
-                            )
+                            Column(
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(start = 20.dp),
+                                    text = "EndToStart"
+                                )
+                            }
                         }
                     }
                 }
