@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
@@ -74,7 +73,7 @@ typealias RevealState = SwipeableState<RevealValue>
  * Return an alternative value if whenClosure is true. Replaces if/else
  */
 private fun <T> T.or(orValue: T, whenClosure: T.() -> Boolean): T {
-    return if(whenClosure()) orValue else this
+    return if (whenClosure()) orValue else this
 }
 
 @OptIn(ExperimentalMaterialApi::class)
