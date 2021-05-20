@@ -1,4 +1,5 @@
 # RevealSwipe
+## Current Compose Version: 1.0.0-beta07
 Compose RevealSwipe
 
 Swipable in both directions
