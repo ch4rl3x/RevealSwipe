@@ -16,7 +16,7 @@ Add actual RevealSwipe library:
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:revealswipe:1.0.0-beta02'
+    implementation 'de.charlex.compose:revealswipe:1.0.0-beta03'
 }
 ```
 

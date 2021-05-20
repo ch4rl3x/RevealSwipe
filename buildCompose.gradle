@@ -1,6 +1,5 @@
 
-def compose_version = '1.0.0-beta05'
-def nav_compose_version = "1.0.0-alpha10"
+def compose_version = '1.0.0-beta07'
 
 android {
     kotlinOptions {
@@ -23,16 +22,8 @@ dependencies {
      * Compose
      */
     implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.foundation:foundation:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.material:material-icons-core:$compose_version"
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
-
-    /**
-     * Compose Navigation
-     */
-    implementation "androidx.navigation:navigation-compose:$nav_compose_version"
-
 }
