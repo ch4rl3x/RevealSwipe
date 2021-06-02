@@ -1,5 +1,5 @@
 
-def compose_version = '1.0.0-beta07'
+def compose_version = '1.0.0-beta08'
 
 android {
     kotlinOptions {
