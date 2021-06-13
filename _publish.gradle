@@ -77,7 +77,7 @@ publishing {
                 licenses {
                     license {
                         name = 'Apache-2.0 License'
-                        url = 'https://github.com/ch4rl3x/RevealSwipe/blob/main/LICENSE'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
                 developers {
