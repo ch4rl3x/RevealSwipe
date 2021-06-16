@@ -77,7 +77,7 @@ private fun <T> T.or(orValue: T, whenClosure: T.() -> Boolean): T {
     return if (whenClosure()) orValue else this
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun RevealSwipe(
     modifier: Modifier = Modifier,
@@ -399,6 +399,7 @@ suspend fun RevealState.resetFast() {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 private fun RevealSwipegPreview() {
