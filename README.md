@@ -1,5 +1,5 @@
 # RevealSwipe
-## Current Compose Version: 1.0.0-beta09
+## Current Compose Version: 1.0.1
 Compose RevealSwipe
 
 Swipable in both directions
@@ -17,7 +17,7 @@ Add actual RevealSwipe library:
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:revealswipe:1.0.0-beta05'
+    implementation 'de.charlex.compose:revealswipe:1.0.0'
 }
 ```
 
