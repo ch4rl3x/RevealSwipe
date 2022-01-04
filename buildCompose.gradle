@@ -1,6 +1,3 @@
-
-def compose_version = '1.0.1'
-
 android {
     kotlinOptions {
         jvmTarget = '1.8'
