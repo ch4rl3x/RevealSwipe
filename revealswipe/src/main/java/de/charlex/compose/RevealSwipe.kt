@@ -3,9 +3,11 @@ package de.charlex.compose
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.SnapSpec
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -77,18 +79,21 @@ private fun <T> T.or(orValue: T, whenClosure: T.() -> Boolean): T {
     return if (whenClosure()) orValue else this
 }
 
+/**
+ * @param onContentClick called on click
+ * @param closeOnContentClick if true, returns to unrevealed state on content click
+ */
 @ExperimentalMaterialApi
 @Composable
 fun RevealSwipe(
     modifier: Modifier = Modifier,
     enableSwipe: Boolean = true,
-    onContentClick: () -> Unit = {},
+    onContentClick: (() -> Unit)? = null,
     onBackgroundStartClick: () -> Unit = {},
     onBackgroundEndClick: () -> Unit = {},
     closeOnContentClick: Boolean = true,
     closeOnBackgroundClick: Boolean = true,
     animateBackgroundCardColor: Boolean = true,
-    contentClickHandledExtern: Boolean = false,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
     alphaEasing: Easing = CubicBezierEasing(0.4f, 0.4f, 0.17f, 0.9f),
     maxRevealDp: Dp = 75.dp,
@@ -109,30 +114,36 @@ fun RevealSwipe(
     hiddenContentStart: @Composable RowScope.() -> Unit = {},
     content: @Composable (Shape) -> Unit
 ) {
-    val contentClick = {
-        if (state.targetValue != RevealValue.Default && closeOnContentClick) {
-            coroutineScope.launch {
-                state.reset()
-            }
-            Unit
-        } else onContentClick()
-    }
-    val backgroundStartClick = {
-        if (state.targetValue == RevealValue.FullyRevealedEnd && closeOnBackgroundClick) {
-            coroutineScope.launch {
-                state.reset()
+    val closeOnContentClickHandler = remember(coroutineScope, state) {
+        {
+            if (state.targetValue != RevealValue.Default) {
+                coroutineScope.launch {
+                    state.reset()
+                }
             }
         }
-        onBackgroundStartClick()
     }
 
-    val backgroundEndClick = {
-        if (state.targetValue == RevealValue.FullyRevealedStart && closeOnBackgroundClick) {
-            coroutineScope.launch {
-                state.reset()
+    val backgroundStartClick = remember(coroutineScope, state, onBackgroundStartClick) {
+        {
+            if (state.targetValue == RevealValue.FullyRevealedEnd && closeOnBackgroundClick) {
+                coroutineScope.launch {
+                    state.reset()
+                }
             }
+            onBackgroundStartClick()
         }
-        onBackgroundEndClick()
+    }
+
+    val backgroundEndClick = remember(coroutineScope, state, onBackgroundEndClick) {
+        {
+            if (state.targetValue == RevealValue.FullyRevealedStart && closeOnBackgroundClick) {
+                coroutineScope.launch {
+                    state.reset()
+                }
+            }
+            onBackgroundEndClick()
+        }
     }
 
     Box {
@@ -267,12 +278,39 @@ fun RevealSwipe(
                                 directions = directions
                             ) else Modifier
                     )
-                    .clickable(
-                        onClick = {
-                            contentClick()
-                        },
-                        enabled = contentClickHandledExtern.not()
-                    ),
+                    .then(
+                        if (onContentClick != null && !closeOnContentClick) {
+                            Modifier.clickable(
+                                onClick = onContentClick
+                            )
+                        } else if (onContentClick == null && closeOnContentClick) {
+                            // if no onContentClick handler passed, add click handler with no indication to enable close on content click
+                            Modifier.clickable(
+                                onClick = closeOnContentClickHandler,
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            )
+                        } else if (onContentClick != null && closeOnContentClick) {
+                            // decide based on state:
+                            // 1. if open, just close without indication
+                            // 2. if closed, call click handler
+                            Modifier.clickable(
+                                onClick =
+                                {
+                                    val isOpen = state.targetValue != RevealValue.Default
+                                    // if open, just close. No click event.
+                                    if (isOpen) {
+                                        closeOnContentClickHandler()
+                                    } else {
+                                        onContentClick()
+                                    }
+                                },
+                                // no indication if just closing
+                                indication = if (state.targetValue != RevealValue.Default) null else LocalIndication.current,
+                                interactionSource = remember { MutableInteractionSource() }
+                            )
+                        } else Modifier
+                    )
             ) {
                 content(animatedShape)
             }

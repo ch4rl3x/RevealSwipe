@@ -136,6 +136,7 @@ fun ComplexRevealSamples() {
     Column() {
         TextFieldRevealSwipe()
         ButtonRevealSwipe()
+        ContentClickRevealSwipe()
     }
 }
 
@@ -143,6 +144,7 @@ fun ComplexRevealSamples() {
 @Composable
 private fun ButtonRevealSwipe() {
     RevealSwipe(
+        onContentClick = null,
         modifier = Modifier.padding(vertical = 5.dp),
         hiddenContentStart = {
             Star()
@@ -164,6 +166,8 @@ private fun ButtonRevealSwipe() {
 
                 Spacer(modifier = Modifier.width(16.dp))
                 val state = remember { mutableStateOf(false) }
+                Text("onContentClick = null")
+                Spacer(modifier = Modifier.width(16.dp))
                 Button(onClick = { state.value = !state.value }) {
                     Text("Click me!")
                 }
@@ -185,7 +189,6 @@ private fun TextFieldRevealSwipe() {
         hiddenContentEnd = {
             Trash()
         },
-//        contentClickHandledExtern = true
     ) {
         Card(
             shape = it,
@@ -213,6 +216,41 @@ private fun TextFieldRevealSwipe() {
                         }
                     }
                 )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun ContentClickRevealSwipe() {
+    val state = remember { mutableStateOf(false) }
+    RevealSwipe(
+        onContentClick = { state.value = !state.value },
+        closeOnContentClick = true,
+        modifier = Modifier.padding(vertical = 5.dp),
+        hiddenContentStart = {
+            Star()
+        },
+        hiddenContentEnd = {
+            Trash()
+        },
+    ) {
+        Card(
+            shape = it,
+            backgroundColor = colors.three
+        ) {
+            Row(
+                modifier = Modifier
+                    .height(80.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+
+                Spacer(modifier = Modifier.width(16.dp))
+                Text("Click me!")
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(if (state.value) "Clicked!" else "")
             }
         }
     }
