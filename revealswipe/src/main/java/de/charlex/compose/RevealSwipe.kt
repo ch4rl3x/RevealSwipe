@@ -87,12 +87,12 @@ fun RevealSwipe(
         enableSwipe = enableSwipe,
         onContentClick = onContentClick,
         backgroundStartActionLabel = null,
-        onBackgroundStartClick= {
+        onBackgroundStartClick = {
             onBackgroundStartClick()
             true
         },
         backgroundEndActionLabel = null,
-        onBackgroundEndClick =  {
+        onBackgroundEndClick = {
             onBackgroundEndClick()
             true
         },
