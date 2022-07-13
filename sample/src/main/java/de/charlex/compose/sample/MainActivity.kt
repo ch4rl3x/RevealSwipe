@@ -107,6 +107,8 @@ fun RevealSamples(items: List<Item>) {
                 hiddenContentEnd = {
                     Trash()
                 },
+                backgroundStartActionLabel = "Mark entry as favorite",
+                backgroundEndActionLabel = "Delete entry",
                 closeOnContentClick = item.closeOnClick
             ) {
                 Card(
@@ -152,6 +154,8 @@ private fun ButtonRevealSwipe() {
         hiddenContentEnd = {
             Trash()
         },
+        backgroundStartActionLabel = "Mark entry as favorite",
+        backgroundEndActionLabel = "Delete entry"
     ) {
         Card(
             shape = it,
@@ -189,6 +193,8 @@ private fun TextFieldRevealSwipe() {
         hiddenContentEnd = {
             Trash()
         },
+        backgroundStartActionLabel = "Mark entry as favorite",
+        backgroundEndActionLabel = "Delete entry"
     ) {
         Card(
             shape = it,
@@ -235,6 +241,8 @@ private fun ContentClickRevealSwipe() {
         hiddenContentEnd = {
             Trash()
         },
+        backgroundStartActionLabel = "Mark entry as favorite",
+        backgroundEndActionLabel = "Delete entry"
     ) {
         Card(
             shape = it,
