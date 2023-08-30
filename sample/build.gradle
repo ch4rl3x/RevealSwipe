@@ -1,11 +1,12 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.spotless
 }
+
 android {
     namespace = "de.charlex.compose.revealswipe.sample"
     compileSdk libs.versions.compileSdk.get().toInteger()
-    buildToolsVersion libs.versions.buildToolsVersion.get()
 
     defaultConfig {
         minSdk libs.versions.minSdk.get().toInteger()

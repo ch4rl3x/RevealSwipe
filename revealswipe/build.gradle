@@ -1,9 +1,9 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    alias libs.plugins.spotless
 }
 
-apply from: '../_ktlint.gradle'
 apply from: '../buildCompose.gradle'
 
 ext {
@@ -17,7 +17,6 @@ apply from: '../_publish.gradle'
 android {
     namespace = "de.charlex.compose.revealswipe"
     compileSdk libs.versions.compileSdk.get().toInteger()
-    buildToolsVersion libs.versions.buildToolsVersion.get()
 
     defaultConfig {
         minSdk libs.versions.minSdk.get().toInteger()
