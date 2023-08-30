@@ -1,19 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-    ext {
-        kotlin_version = "1.6.0"
-        compose_version = '1.1.0-rc01'
-    }
-
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0'
+        classpath libs.kotlin.pluginGradle
+        classpath libs.gradle
+        classpath libs.gradle.nexus.staging.plugin
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -22,6 +17,6 @@ buildscript {
 
 apply plugin: 'io.codearte.nexus-staging'
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDir
 }
