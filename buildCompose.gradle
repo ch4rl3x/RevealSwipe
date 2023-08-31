@@ -24,5 +24,6 @@ dependencies {
     implementation(libs.compose.foundation.foundation)
     implementation(libs.compose.ui.util)
     debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material.material)
 }
