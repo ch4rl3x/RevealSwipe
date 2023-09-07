@@ -1,4 +1,4 @@
-name: Lint
+name: Spotless
 
 on:
   pull_request:
@@ -10,8 +10,8 @@ on:
       - main
 
 jobs:
-  lint:
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]') && ! (contains(toJSON(github.event.commits.*.message), '[skip ') && contains(toJSON(github.event.commits.*.message), '#lint'))"
+  spotless:
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]') && ! (contains(toJSON(github.event.commits.*.message), '[skip ') && contains(toJSON(github.event.commits.*.message), '#spotless'))"
     runs-on: ubuntu-latest
 
     steps:
@@ -26,4 +26,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew lint
+        run: ./gradlew spotlessCheck

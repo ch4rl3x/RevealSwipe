@@ -1,29 +1,26 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    alias libs.plugins.spotless
 }
 
-apply from: '../_ktlint.gradle'
 apply from: '../buildCompose.gradle'
 
 ext {
     PUBLISH_GROUP_ID = 'de.charlex.compose'
     PUBLISH_VERSION = '1.1.0'
     PUBLISH_ARTIFACT_ID = 'revealswipe'
-
-    kotlin_version = "1.6.0"
-    compose_version = '1.1.0-rc01'
 }
 
 apply from: '../_publish.gradle'
 
 android {
-    compileSdk 31
-    buildToolsVersion "30.0.3"
+    namespace = "de.charlex.compose.revealswipe"
+    compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
-        minSdk 21
-        targetSdk 31
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.targetSdk.get().toInteger()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,15 +37,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation libs.kotlin.stdlib.jdk8
 }
