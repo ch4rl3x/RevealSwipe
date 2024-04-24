@@ -4,8 +4,9 @@ Compose RevealSwipe (Material 3)
 
 Swipable in both directions
 
+<a href="https://github.com/ch4rl3x/RevealSwipe/actions?query=workflow%3ABuild and test"><img src="https://github.com/ch4rl3x/RevealSwipe/workflows/Build and test/badge.svg" alt="Build and test"></a>
 <a href="https://github.com/ch4rl3x/RevealSwipe/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/RevealSwipe/workflows/Lint/badge.svg" alt="Lint"></a>
-<a href="https://github.com/ch4rl3x/RevealSwipe/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/RevealSwipe/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
+<a href="https://github.com/ch4rl3x/RevealSwipe/actions?query=workflow%3ASpotless"><img src="https://github.com/ch4rl3x/RevealSwipe/workflows/Spotless/badge.svg" alt="Spotless"></a>
 
 <a href="https://www.codefactor.io/repository/github/ch4rl3x/RevealSwipe"><img src="https://www.codefactor.io/repository/github/ch4rl3x/RevealSwipe/badge" alt="CodeFactor" /></a>
 <a href="https://repo1.maven.org/maven2/de/charlex/compose/revealswipe/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose/revealswipe" alt="Maven Central" /></a>
