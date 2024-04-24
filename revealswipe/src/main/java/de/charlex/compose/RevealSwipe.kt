@@ -1,25 +1,38 @@
 package de.charlex.compose
 
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.SnapSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -30,6 +43,7 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
@@ -40,9 +54,6 @@ import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterialApi::class)
-typealias RevealState = SwipeableState<RevealValue>
-
 /**
  * Return an alternative value if whenClosure is true. Replaces if/else
  */
@@ -50,79 +61,7 @@ private fun <T> T.or(orValue: T, whenClosure: T.() -> Boolean): T {
     return if (whenClosure()) orValue else this
 }
 
-@ExperimentalMaterialApi
-@Deprecated("Don't use these function anymore. Its not ready for accessibility")
-@Composable
-fun RevealSwipe(
-    modifier: Modifier = Modifier,
-    enableSwipe: Boolean = true,
-    onContentClick: (() -> Unit)? = null,
-    onBackgroundStartClick: () -> Unit = { },
-    onBackgroundEndClick: () -> Unit = { },
-    closeOnContentClick: Boolean = true,
-    closeOnBackgroundClick: Boolean = true,
-    animateBackgroundCardColor: Boolean = true,
-    shape: CornerBasedShape = MaterialTheme.shapes.medium,
-    alphaEasing: Easing = CubicBezierEasing(0.4f, 0.4f, 0.17f, 0.9f),
-    maxRevealDp: Dp = 75.dp,
-    maxAmountOfOverflow: Dp = 250.dp,
-    directions: Set<RevealDirection> = setOf(
-        RevealDirection.StartToEnd,
-        RevealDirection.EndToStart
-    ),
-    contentColor: Color = LocalContentColor.current,
-    backgroundCardModifier: Modifier = modifier,
-    backgroundCardElevation: Dp = 0.dp,
-    backgroundCardStartColor: Color = MaterialTheme.colors.secondaryVariant,
-    backgroundCardEndColor: Color = MaterialTheme.colors.secondary,
-    backgroundCardContentColor: Color = MaterialTheme.colors.onSecondary,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    state: RevealState = rememberRevealState(),
-    hiddenContentEnd: @Composable RowScope.() -> Unit = {},
-    hiddenContentStart: @Composable RowScope.() -> Unit = {},
-    content: @Composable (Shape) -> Unit
-) {
-    RevealSwipe(
-        modifier = Modifier,
-        enableSwipe = enableSwipe,
-        onContentClick = onContentClick,
-        backgroundStartActionLabel = null,
-        onBackgroundStartClick = {
-            onBackgroundStartClick()
-            true
-        },
-        backgroundEndActionLabel = null,
-        onBackgroundEndClick = {
-            onBackgroundEndClick()
-            true
-        },
-        closeOnContentClick = closeOnContentClick,
-        closeOnBackgroundClick = closeOnBackgroundClick,
-        animateBackgroundCardColor = animateBackgroundCardColor,
-        shape = shape,
-        alphaEasing = alphaEasing,
-        maxRevealDp = maxRevealDp,
-        maxAmountOfOverflow = maxAmountOfOverflow,
-        directions = directions,
-        contentColor = contentColor,
-        backgroundCardModifier = backgroundCardModifier,
-        backgroundCardElevation = backgroundCardElevation,
-        backgroundCardStartColor = backgroundCardStartColor,
-        backgroundCardEndColor = backgroundCardEndColor,
-        backgroundCardContentColor = backgroundCardContentColor,
-        coroutineScope = coroutineScope,
-        state = state,
-        hiddenContentEnd = hiddenContentEnd,
-        hiddenContentStart = hiddenContentStart,
-        content = content
-    )
-}
-
-/**
- * @param onContentClick called on click
- * @param closeOnContentClick if true, returns to unrevealed state on content click
- */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RevealSwipe(
     modifier: Modifier = Modifier,
@@ -137,27 +76,27 @@ fun RevealSwipe(
     animateBackgroundCardColor: Boolean = true,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
     alphaEasing: Easing = CubicBezierEasing(0.4f, 0.4f, 0.17f, 0.9f),
-    maxRevealDp: Dp = 75.dp,
-    maxAmountOfOverflow: Dp = 250.dp,
-    directions: Set<RevealDirection> = setOf(
-        RevealDirection.StartToEnd,
-        RevealDirection.EndToStart
-    ),
     contentColor: Color = LocalContentColor.current,
     backgroundCardModifier: Modifier = modifier,
-    backgroundCardElevation: Dp = 0.dp,
-    backgroundCardStartColor: Color = MaterialTheme.colors.secondaryVariant,
-    backgroundCardEndColor: Color = MaterialTheme.colors.secondary,
-    backgroundCardContentColor: Color = MaterialTheme.colors.onSecondary,
+    backgroundCardElevation: CardElevation = CardDefaults.cardElevation(),
+    backgroundCardStartColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
+    backgroundCardEndColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundCardContentColor: Color = MaterialTheme.colorScheme.onSecondary,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    state: RevealState = rememberRevealState(),
+    state: RevealState = rememberRevealState(
+        maxRevealDp = 75.dp,
+        directions = setOf(
+            RevealDirection.StartToEnd,
+            RevealDirection.EndToStart
+        )
+    ),
     hiddenContentEnd: @Composable RowScope.() -> Unit = {},
     hiddenContentStart: @Composable RowScope.() -> Unit = {},
     content: @Composable (Shape) -> Unit
 ) {
     val closeOnContentClickHandler = remember(coroutineScope, state) {
         {
-            if (state.targetValue != RevealValue.Default) {
+            if (state.anchoredDraggableState.targetValue != RevealValue.Default) {
                 coroutineScope.launch {
                     state.reset()
                 }
@@ -167,7 +106,7 @@ fun RevealSwipe(
 
     val backgroundStartClick = remember(coroutineScope, state, onBackgroundStartClick) {
         {
-            if (state.targetValue == RevealValue.FullyRevealedEnd && closeOnBackgroundClick) {
+            if (state.anchoredDraggableState.targetValue == RevealValue.FullyRevealedEnd && closeOnBackgroundClick) {
                 coroutineScope.launch {
                     state.reset()
                 }
@@ -178,7 +117,7 @@ fun RevealSwipe(
 
     val backgroundEndClick = remember(coroutineScope, state, onBackgroundEndClick) {
         {
-            if (state.targetValue == RevealValue.FullyRevealedStart && closeOnBackgroundClick) {
+            if (state.anchoredDraggableState.targetValue == RevealValue.FullyRevealedStart && closeOnBackgroundClick) {
                 coroutineScope.launch {
                     state.reset()
                 }
@@ -222,13 +161,13 @@ fun RevealSwipe(
             kotlin.math.max(cornerRadiusTopEnd, cornerRadiusBottomEnd)
 
         val cornerFactorEnd =
-            (-state.offset.value / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f).or(0f) {
-                directions.contains(RevealDirection.EndToStart).not()
+            (-state.anchoredDraggableState.offset / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f).or(0f) {
+                state.directions.contains(RevealDirection.EndToStart).not()
             }
 
         val cornerFactorStart =
-            (state.offset.value / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f).or(0f) {
-                directions.contains(RevealDirection.StartToEnd).not()
+            (state.anchoredDraggableState.offset / minDragAmountForStraightCorner).nonNaNorZero().coerceIn(0f, 1f).or(0f) {
+                state.directions.contains(RevealDirection.StartToEnd).not()
             }
 
         val animatedCornerRadiusTopEnd: Float = lerp(cornerRadiusTopEnd, 0f, cornerFactorEnd)
@@ -245,9 +184,8 @@ fun RevealSwipe(
         )
 
         // alpha for background
-        val maxRevealPx = with(LocalDensity.current) { maxRevealDp.toPx() }
-        val draggedRatio =
-            (state.offset.value.absoluteValue / maxRevealPx.absoluteValue).coerceIn(0f, 1f)
+        val maxRevealPx = with(LocalDensity.current) { state.maxRevealDp.toPx() }
+        val draggedRatio = (state.anchoredDraggableState.offset.absoluteValue / maxRevealPx.absoluteValue).coerceIn(0f, 1f)
 
         // cubic parameters can be evaluated here https://cubic-bezier.com/
         val alpha = alphaEasing.transform(draggedRatio)
@@ -262,8 +200,10 @@ fun RevealSwipe(
 
         // non swipable with hidden content
         Card(
-            contentColor = backgroundCardContentColor,
-            backgroundColor = Color.Transparent,
+            colors = CardDefaults.cardColors(
+                contentColor = backgroundCardContentColor,
+                containerColor = Color.Transparent
+            ),
             modifier = backgroundCardModifier
                 .matchParentSize(),
             shape = shape,
@@ -280,7 +220,7 @@ fun RevealSwipe(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .fillMaxHeight()
-                        .background(if (directions.contains(RevealDirection.StartToEnd)) animatedBackgroundStartColor else Color.Transparent)
+                        .background(if (state.directions.contains(RevealDirection.StartToEnd)) animatedBackgroundStartColor else Color.Transparent)
                         .clickable(onClick = {
                             backgroundStartClick()
                         }),
@@ -292,7 +232,7 @@ fun RevealSwipe(
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .fillMaxHeight()
-                        .background(if (directions.contains(RevealDirection.EndToStart)) animatedBackgroundEndColor else Color.Transparent)
+                        .background(if (state.directions.contains(RevealDirection.EndToStart)) animatedBackgroundEndColor else Color.Transparent)
                         .clickable(onClick = {
                             backgroundEndClick()
                         }),
@@ -309,38 +249,40 @@ fun RevealSwipe(
             Box(
                 modifier = modifier
                     .then(
-                        if (enableSwipe) Modifier
-                            .offset {
-                                IntOffset(
-                                    state.offset.value.roundToInt(),
-                                    0
+                        if (enableSwipe)
+                            Modifier
+                                .offset {
+                                    IntOffset(
+                                        x = state.anchoredDraggableState.requireOffset().roundToInt(),
+                                        y = 0,
+                                    )
+                                }
+                                .anchoredDraggable(
+                                    state = state.anchoredDraggableState,
+                                    orientation = Orientation.Horizontal,
+                                    enabled = true, // state.value == RevealValue.Default,
+                                    reverseDirection = LocalLayoutDirection.current == LayoutDirection.Rtl
                                 )
-                            }
-                            .revealSwipable(
-                                state = state,
-                                maxRevealPx = maxRevealPx,
-                                maxAmountOfOverflow = maxAmountOfOverflow,
-                                directions = directions
-                            ).semantics {
-                                customActions = buildList {
-                                    backgroundStartActionLabel?.let {
-                                        add(
-                                            CustomAccessibilityAction(
-                                                it,
-                                                onBackgroundStartClick
+                                .semantics {
+                                    customActions = buildList {
+                                        backgroundStartActionLabel?.let {
+                                            add(
+                                                CustomAccessibilityAction(
+                                                    it,
+                                                    onBackgroundStartClick
+                                                )
                                             )
-                                        )
-                                    }
-                                    backgroundEndActionLabel?.let {
-                                        add(
-                                            CustomAccessibilityAction(
-                                                it,
-                                                onBackgroundEndClick
+                                        }
+                                        backgroundEndActionLabel?.let {
+                                            add(
+                                                CustomAccessibilityAction(
+                                                    it,
+                                                    onBackgroundEndClick
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
-                            }
                         else Modifier
                     )
                     .then(
@@ -362,7 +304,7 @@ fun RevealSwipe(
                             Modifier.clickable(
                                 onClick =
                                 {
-                                    val isOpen = state.targetValue != RevealValue.Default
+                                    val isOpen = state.anchoredDraggableState.targetValue != RevealValue.Default
                                     // if open, just close. No click event.
                                     if (isOpen) {
                                         closeOnContentClickHandler()
@@ -371,7 +313,7 @@ fun RevealSwipe(
                                     }
                                 },
                                 // no indication if just closing
-                                indication = if (state.targetValue != RevealValue.Default) null else LocalIndication.current,
+                                indication = if (state.anchoredDraggableState.targetValue != RevealValue.Default) null else LocalIndication.current,
                                 interactionSource = remember { MutableInteractionSource() }
                             )
                         } else Modifier
@@ -386,47 +328,6 @@ fun RevealSwipe(
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-private fun Modifier.revealSwipable(
-    maxRevealPx: Float,
-    maxAmountOfOverflow: Dp,
-    directions: Set<RevealDirection>,
-    state: RevealState,
-) = composed {
-
-    val maxAmountOfOverflowPx = with(LocalDensity.current) { maxAmountOfOverflow.toPx() }
-
-    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-
-    val anchors = mutableMapOf(0f to RevealValue.Default)
-
-    if (RevealDirection.StartToEnd in directions) anchors += maxRevealPx to RevealValue.FullyRevealedEnd
-    if (RevealDirection.EndToStart in directions) anchors += -maxRevealPx to RevealValue.FullyRevealedStart
-
-    val thresholds = { _: RevealValue, _: RevealValue ->
-        FractionalThreshold(0.5f)
-    }
-
-    val minFactor =
-        if (RevealDirection.EndToStart in directions) SwipeableDefaults.StandardResistanceFactor else SwipeableDefaults.StiffResistanceFactor
-    val maxFactor =
-        if (RevealDirection.StartToEnd in directions) SwipeableDefaults.StandardResistanceFactor else SwipeableDefaults.StiffResistanceFactor
-
-    Modifier.swipeable(
-        state = state,
-        anchors = anchors,
-        thresholds = thresholds,
-        orientation = Orientation.Horizontal,
-        enabled = true, // state.value == RevealValue.Default,
-        reverseDirection = isRtl,
-        resistance = ResistanceConfig(
-            basis = maxAmountOfOverflowPx,
-            factorAtMin = minFactor,
-            factorAtMax = maxFactor
-        )
-    )
 }
 
 private fun Float.nonNaNorZero() = if (isNaN()) 0f else this
@@ -469,24 +370,64 @@ enum class RevealValue {
  * @param initialValue The initial value of the state.
  * @param confirmStateChange Optional callback invoked to confirm or veto a pending state change.
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun rememberRevealState(
+    maxRevealDp: Dp = 75.dp,
+    directions: Set<RevealDirection> = setOf(RevealDirection.StartToEnd, RevealDirection.EndToStart),
     initialValue: RevealValue = RevealValue.Default,
-    confirmStateChange: (RevealValue) -> Boolean = { true },
+    positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
+    velocityThreshold: (() -> Float)? = null,
+    animationSpec: AnimationSpec<Float> = tween(),
+    confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ): RevealState {
-    return rememberSwipeableState(
+    val density = LocalDensity.current
+    return remember {
+        RevealState(
+            maxRevealDp = maxRevealDp,
+            directions = directions,
+            density = density,
+            initialValue = initialValue,
+            positionalThreshold = positionalThreshold,
+            velocityThreshold = velocityThreshold ?: { with(density) { 100.dp.toPx() } },
+            animationSpec = animationSpec,
+            confirmValueChange = confirmValueChange
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+data class RevealState(
+    val maxRevealDp: Dp = 75.dp,
+    val directions: Set<RevealDirection>,
+    private val density: Density,
+    private val initialValue: RevealValue = RevealValue.Default,
+    private val positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
+    private val velocityThreshold: (() -> Float)? = null,
+    private val animationSpec: AnimationSpec<Float> = tween(),
+    private val confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
+) {
+    @OptIn(ExperimentalFoundationApi::class)
+    val anchoredDraggableState: AnchoredDraggableState<RevealValue> = AnchoredDraggableState(
         initialValue = initialValue,
-        confirmStateChange = confirmStateChange
+        positionalThreshold = positionalThreshold,
+        velocityThreshold = velocityThreshold ?: { with(density) { 10.dp.toPx() } },
+        animationSpec = animationSpec,
+        anchors = DraggableAnchors {
+            RevealValue.Default at 0f
+            if (RevealDirection.StartToEnd in directions) RevealValue.FullyRevealedEnd at with(density) { maxRevealDp.toPx() }
+            if (RevealDirection.EndToStart in directions) RevealValue.FullyRevealedStart at -with(density) { maxRevealDp.toPx() }
+        },
+        confirmValueChange = confirmValueChange
     )
 }
+
 
 /**
  * Reset the component to the default position, with an animation.
  */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalFoundationApi::class)
 suspend fun RevealState.reset() {
-    animateTo(
+    anchoredDraggableState.animateTo(
         targetValue = RevealValue.Default,
     )
 }
@@ -494,15 +435,13 @@ suspend fun RevealState.reset() {
 /**
  * Reset the component to the default position, with an animation.
  */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalFoundationApi::class)
 suspend fun RevealState.resetFast() {
-    animateTo(
+    anchoredDraggableState.snapTo(
         targetValue = RevealValue.Default,
-        anim = SnapSpec(1)
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 private fun RevealSwipegPreview() {
@@ -520,10 +459,10 @@ private fun RevealSwipegPreview() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
-                        directions = setOf(
+                        state = rememberRevealState(directions = setOf(
                             RevealDirection.StartToEnd,
                             RevealDirection.EndToStart
-                        ),
+                        )),
                         backgroundStartActionLabel = "Delete entry",
                         backgroundEndActionLabel = "Mark as favorite",
                         hiddenContentStart = {
@@ -546,7 +485,9 @@ private fun RevealSwipegPreview() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .requiredHeight(80.dp),
-                            backgroundColor = Color(0xFF505160),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFF505160)
+                            ),
                             shape = it,
                         ) {
                             Column(
@@ -565,14 +506,14 @@ private fun RevealSwipegPreview() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
+                        state = rememberRevealState(directions = setOf(
+                            RevealDirection.StartToEnd,
+                            RevealDirection.EndToStart
+                        )),
                         closeOnContentClick = false,
                         closeOnBackgroundClick = false,
                         backgroundStartActionLabel = null,
                         backgroundEndActionLabel = null,
-                        directions = setOf(
-                            RevealDirection.StartToEnd,
-                            RevealDirection.EndToStart
-                        ),
                         hiddenContentStart = {
                             Icon(
                                 modifier = Modifier.padding(horizontal = 25.dp),
@@ -593,7 +534,9 @@ private fun RevealSwipegPreview() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .requiredHeight(80.dp),
-                            backgroundColor = Color(0xFF68829E),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFF68829E)
+                            ),
                             shape = it,
                         ) {
                             Column(
@@ -612,9 +555,9 @@ private fun RevealSwipegPreview() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
-                        directions = setOf(
-                            RevealDirection.StartToEnd,
-                        ),
+                        state = rememberRevealState(directions = setOf(
+                            RevealDirection.StartToEnd
+                        )),
                         backgroundStartActionLabel = null,
                         backgroundEndActionLabel = null,
                         hiddenContentStart = {
@@ -637,7 +580,9 @@ private fun RevealSwipegPreview() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .requiredHeight(80.dp),
-                            backgroundColor = Color(0xFFAEBD38),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFFAEBD38)
+                            ),
                             shape = it,
                         ) {
                             Column(
@@ -657,9 +602,7 @@ private fun RevealSwipegPreview() {
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
                         animateBackgroundCardColor = false,
-                        directions = setOf(
-                            RevealDirection.EndToStart,
-                        ),
+                        state = rememberRevealState(directions = setOf(RevealDirection.EndToStart)),
                         backgroundStartActionLabel = null,
                         backgroundEndActionLabel = null,
                         hiddenContentStart = {
@@ -682,7 +625,9 @@ private fun RevealSwipegPreview() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .requiredHeight(80.dp),
-                            backgroundColor = Color(0xFF598234),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xFF598234)
+                            ),
                             shape = it,
                         ) {
                             Column(

@@ -3,17 +3,29 @@ package de.charlex.compose.sample
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.charlex.compose.RevealDirection
 import de.charlex.compose.RevealSwipe
-import de.charlex.compose.sample.ui.theme.*
+import de.charlex.compose.rememberRevealState
 
 data class Item(
     val label: String,
@@ -36,24 +48,24 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RevealSwipeTheme {
+            MaterialTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background,
-                    contentColor = colors.onPrimary
+                    color = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
+
                     Column(
                         modifier = Modifier
                             .padding(16.dp)
                             .verticalScroll(rememberScrollState())
                     ) {
-
                         RevealSamples(
                             items = listOf(
                                 Item(
                                     label = "Both directions",
-                                    color = colors.one,
+                                    color = MaterialTheme.colorScheme.primary,
                                     directions = setOf(
                                         RevealDirection.StartToEnd,
                                         RevealDirection.EndToStart,
@@ -61,7 +73,7 @@ class MainActivity : ComponentActivity() {
                                 ),
                                 Item(
                                     label = "Both directions, closeOnClick = false",
-                                    color = colors.two,
+                                    color = MaterialTheme.colorScheme.secondary,
                                     directions = setOf(
                                         RevealDirection.StartToEnd,
                                         RevealDirection.EndToStart,
@@ -70,14 +82,14 @@ class MainActivity : ComponentActivity() {
                                 ),
                                 Item(
                                     label = "StartToEnd",
-                                    color = colors.three,
+                                    color = MaterialTheme.colorScheme.tertiary,
                                     directions = setOf(
                                         RevealDirection.StartToEnd,
                                     ),
                                 ),
                                 Item(
                                     label = "EndToStart",
-                                    color = colors.four,
+                                    color = MaterialTheme.colorScheme.primary,
                                     directions = setOf(
                                         RevealDirection.EndToStart,
                                     ),
@@ -93,14 +105,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RevealSamples(items: List<Item>) {
     Column() {
         items.forEach { item ->
             RevealSwipe(
                 modifier = Modifier.padding(vertical = 5.dp),
-                directions = item.directions,
+                state = rememberRevealState(directions = item.directions),
                 hiddenContentStart = {
                     Star()
                 },
@@ -112,7 +123,9 @@ fun RevealSamples(items: List<Item>) {
                 closeOnContentClick = item.closeOnClick
             ) {
                 Card(
-                    backgroundColor = item.color,
+                    colors = CardDefaults.cardColors(
+                        containerColor = item.color
+                    ),
                     shape = it,
                 ){
                     Box(
@@ -132,7 +145,6 @@ fun RevealSamples(items: List<Item>) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ComplexRevealSamples() {
     Column() {
@@ -142,7 +154,6 @@ fun ComplexRevealSamples() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ButtonRevealSwipe() {
     RevealSwipe(
@@ -159,7 +170,9 @@ private fun ButtonRevealSwipe() {
     ) {
         Card(
             shape = it,
-            backgroundColor = colors.two
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            )
         ) {
             Row(
                 modifier = Modifier
@@ -182,7 +195,6 @@ private fun ButtonRevealSwipe() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun TextFieldRevealSwipe() {
     RevealSwipe(
@@ -216,9 +228,7 @@ private fun TextFieldRevealSwipe() {
                     decorationBox = {
                         it()
                         if (text.value.isBlank()) {
-                            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                                Text("Enter Name")
-                            }
+                            Text("Enter Name")
                         }
                     }
                 )
@@ -227,7 +237,6 @@ private fun TextFieldRevealSwipe() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ContentClickRevealSwipe() {
     val state = remember { mutableStateOf(false) }
@@ -246,7 +255,9 @@ private fun ContentClickRevealSwipe() {
     ) {
         Card(
             shape = it,
-            backgroundColor = colors.three
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiary
+            )
         ) {
             Row(
                 modifier = Modifier
@@ -286,7 +297,7 @@ private fun Star() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    RevealSwipeTheme {
+    MaterialTheme {
         RevealSamples(listOf(
             Item(
                 label = "Both directions",
