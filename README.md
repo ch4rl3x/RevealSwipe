@@ -1,5 +1,4 @@
 # RevealSwipe
-## Current Compose Version: 2023.04.00
 Compose RevealSwipe (Material 3)
 
 Swipable in both directions
