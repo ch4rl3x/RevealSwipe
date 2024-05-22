@@ -216,30 +216,36 @@ fun RevealSwipe(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .fillMaxHeight()
-                        .background(if (state.directions.contains(RevealDirection.StartToEnd)) animatedBackgroundStartColor else Color.Transparent)
-                        .clickable(onClick = {
-                            backgroundStartClick()
-                        }),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    content = hiddenContentStart
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                        .fillMaxHeight()
-                        .background(if (state.directions.contains(RevealDirection.EndToStart)) animatedBackgroundEndColor else Color.Transparent)
-                        .clickable(onClick = {
-                            backgroundEndClick()
-                        }),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                    content = hiddenContentEnd
-                )
+                val hasStartContent = state.directions.contains(RevealDirection.StartToEnd)
+                val hasEndContent = state.directions.contains(RevealDirection.EndToStart)
+                if (hasStartContent) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(if (hasEndContent) 0.5f else 1F)
+                            .fillMaxHeight()
+                            .background(animatedBackgroundStartColor)
+                            .clickable(onClick = {
+                                backgroundStartClick()
+                            }),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = hiddenContentStart
+                    )
+                }
+                if (hasEndContent) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .background(animatedBackgroundEndColor)
+                            .clickable(onClick = {
+                                backgroundEndClick()
+                            }),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = hiddenContentEnd
+                    )
+                }
             }
         }
 
