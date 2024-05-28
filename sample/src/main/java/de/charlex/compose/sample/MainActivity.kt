@@ -1,6 +1,7 @@
 package de.charlex.compose.sample
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.charlex.compose.RevealDirection
@@ -108,6 +110,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RevealSamples(items: List<Item>) {
     Column() {
+        val context = LocalContext.current
         items.forEach { item ->
             RevealSwipe(
                 modifier = Modifier.padding(vertical = 5.dp),
@@ -120,7 +123,19 @@ fun RevealSamples(items: List<Item>) {
                 },
                 backgroundStartActionLabel = "Mark entry as favorite",
                 backgroundEndActionLabel = "Delete entry",
-                closeOnContentClick = item.closeOnClick
+                closeOnContentClick = item.closeOnClick,
+                onContentClick = {
+                    Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show()
+                },
+                onBackgroundEndClick = {
+                    Toast.makeText(context, "End", Toast.LENGTH_SHORT).show()
+                    true
+                }, onBackgroundStartClick = {
+                    Toast.makeText(context, "Start", Toast.LENGTH_SHORT).show()
+                    true
+                },
+                backgroundCardEndColor = MaterialTheme.colorScheme.primary,
+                backgroundCardStartColor = MaterialTheme.colorScheme.secondary
             ) {
                 Card(
                     colors = CardDefaults.cardColors(
@@ -150,6 +165,7 @@ fun ComplexRevealSamples() {
     Column() {
         TextFieldRevealSwipe()
         ButtonRevealSwipe()
+        ButtonRevealSwipe2()
         ContentClickRevealSwipe()
     }
 }
@@ -184,6 +200,48 @@ private fun ButtonRevealSwipe() {
                 Spacer(modifier = Modifier.width(16.dp))
                 val state = remember { mutableStateOf(false) }
                 Text("onContentClick = null")
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(onClick = { state.value = !state.value }) {
+                    Text("Click me!")
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(if (state.value) "Clicked!" else "")
+            }
+        }
+    }
+}
+@Composable
+private fun ButtonRevealSwipe2() {
+    RevealSwipe(
+        onContentClick = {
+
+        },
+        modifier = Modifier.padding(vertical = 5.dp),
+        hiddenContentStart = {
+            Star()
+        },
+        hiddenContentEnd = {
+            Trash()
+        },
+        backgroundStartActionLabel = "Mark entry as favorite",
+        backgroundEndActionLabel = "Delete entry"
+    ) {
+        Card(
+            shape = it,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .height(80.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+
+                Spacer(modifier = Modifier.width(16.dp))
+                val state = remember { mutableStateOf(false) }
+                Text("onContentClick = { }")
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(onClick = { state.value = !state.value }) {
                     Text("Click me!")

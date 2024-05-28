@@ -224,9 +224,9 @@ fun RevealSwipe(
                             .fillMaxWidth(if (hasEndContent) 0.5f else 1F)
                             .fillMaxHeight()
                             .background(animatedBackgroundStartColor)
-                            .clickable(onClick = {
-                                backgroundStartClick()
-                            }),
+                            .nonFocusableClickable(
+                                onClick = backgroundStartClick
+                            ),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
                         content = hiddenContentStart
@@ -238,9 +238,9 @@ fun RevealSwipe(
                             .fillMaxWidth()
                             .fillMaxHeight()
                             .background(animatedBackgroundEndColor)
-                            .clickable(onClick = {
-                                backgroundEndClick()
-                            }),
+                            .nonFocusableClickable(
+                                onClick = backgroundEndClick
+                            ),
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically,
                         content = hiddenContentEnd
