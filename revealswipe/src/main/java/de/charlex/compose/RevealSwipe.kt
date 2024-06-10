@@ -2,7 +2,9 @@ package de.charlex.compose
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
@@ -384,6 +386,7 @@ fun rememberRevealState(
     positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
     velocityThreshold: (() -> Float)? = null,
     animationSpec: AnimationSpec<Float> = tween(),
+    decayAnimationSpec:DecayAnimationSpec<Float> = exponentialDecay(),
     confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ): RevealState {
     val density = LocalDensity.current
@@ -396,6 +399,7 @@ fun rememberRevealState(
             positionalThreshold = positionalThreshold,
             velocityThreshold = velocityThreshold ?: { with(density) { 100.dp.toPx() } },
             animationSpec = animationSpec,
+            decayAnimationSpec = decayAnimationSpec,
             confirmValueChange = confirmValueChange
         )
     }
@@ -410,19 +414,21 @@ data class RevealState(
     private val positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
     private val velocityThreshold: (() -> Float)? = null,
     private val animationSpec: AnimationSpec<Float> = tween(),
+    private val decayAnimationSpec: DecayAnimationSpec<Float>,
     private val confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ) {
     @OptIn(ExperimentalFoundationApi::class)
     val anchoredDraggableState: AnchoredDraggableState<RevealValue> = AnchoredDraggableState(
         initialValue = initialValue,
-        positionalThreshold = positionalThreshold,
-        velocityThreshold = velocityThreshold ?: { with(density) { 10.dp.toPx() } },
-        animationSpec = animationSpec,
         anchors = DraggableAnchors {
             RevealValue.Default at 0f
             if (RevealDirection.StartToEnd in directions) RevealValue.FullyRevealedEnd at with(density) { maxRevealDp.toPx() }
             if (RevealDirection.EndToStart in directions) RevealValue.FullyRevealedStart at -with(density) { maxRevealDp.toPx() }
         },
+        positionalThreshold = positionalThreshold,
+        velocityThreshold = velocityThreshold ?: { with(density) { 10.dp.toPx() } },
+        snapAnimationSpec = animationSpec,
+        decayAnimationSpec = decayAnimationSpec,
         confirmValueChange = confirmValueChange
     )
 }
