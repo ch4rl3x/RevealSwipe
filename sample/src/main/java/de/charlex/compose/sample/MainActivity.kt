@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,9 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.charlex.compose.BaseRevealSwipe
 import de.charlex.compose.RevealDirection
 import de.charlex.compose.RevealSwipe
 import de.charlex.compose.rememberRevealState
@@ -127,6 +131,9 @@ fun RevealSamples(items: List<Item>) {
                 onContentClick = {
                     Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show()
                 },
+                onContentLongClick = { offset ->
+                    Toast.makeText(context, "LongClick: $offset", Toast.LENGTH_SHORT).show()
+                },
                 onBackgroundEndClick = {
                     Toast.makeText(context, "End", Toast.LENGTH_SHORT).show()
                     true
@@ -134,8 +141,20 @@ fun RevealSamples(items: List<Item>) {
                     Toast.makeText(context, "Start", Toast.LENGTH_SHORT).show()
                     true
                 },
-                backgroundCardEndColor = MaterialTheme.colorScheme.primary,
-                backgroundCardStartColor = MaterialTheme.colorScheme.secondary
+                backgroundCardEndColor = MaterialTheme.colorScheme.secondaryContainer,
+                backgroundCardStartColor = MaterialTheme.colorScheme.tertiaryContainer,
+                shape = MaterialTheme.shapes.medium,
+                card = { shape, content ->
+                    Card(
+                        modifier = Modifier.matchParentSize(),
+                        colors = CardDefaults.cardColors(
+                            contentColor = MaterialTheme.colorScheme.onSecondary,
+                            containerColor = Color.Transparent
+                        ),
+                        shape = shape,
+                        content = content
+                    )
+                }
             ) {
                 Card(
                     colors = CardDefaults.cardColors(
@@ -163,10 +182,88 @@ fun RevealSamples(items: List<Item>) {
 @Composable
 fun ComplexRevealSamples() {
     Column() {
+        BaseRevealSwipe()
         TextFieldRevealSwipe()
         ButtonRevealSwipe()
         ButtonRevealSwipe2()
         ContentClickRevealSwipe()
+    }
+}
+
+@Composable
+private fun BaseRevealSwipe() {
+    val context = LocalContext.current
+
+    BaseRevealSwipe(
+        modifier = Modifier.padding(vertical = 5.dp),
+        hiddenContentEnd = {
+            Row(
+//                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    onClick = {
+                        Toast.makeText(context, "Star", Toast.LENGTH_SHORT).show()
+                    }
+                ) {
+                    Star()
+                }
+                IconButton(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    onClick = {
+                        Toast.makeText(context, "Trash", Toast.LENGTH_SHORT).show()
+                    }
+                ) {
+                    Trash()
+                }
+            }
+        },
+        state = rememberRevealState(
+            maxRevealDp = 150.dp,
+            directions = setOf(
+                RevealDirection.EndToStart,
+            )
+        ),
+        backgroundCardEndColor = MaterialTheme.colorScheme.secondaryContainer,
+        backgroundCardStartColor = MaterialTheme.colorScheme.tertiaryContainer,
+        shape = MaterialTheme.shapes.medium,
+        card = { shape, content ->
+            Card(
+                modifier = Modifier.matchParentSize(),
+                colors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = Color.Transparent
+                ),
+                shape = shape,
+                content = content
+            )
+        }
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(
+                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            elevation = CardDefaults.elevatedCardElevation(),
+            shape = it
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(80.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 20.dp),
+                    text = "BaseRevealSwipe"
+                )
+            }
+        }
     }
 }
 
@@ -182,7 +279,21 @@ private fun ButtonRevealSwipe() {
             Trash()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
-        backgroundEndActionLabel = "Delete entry"
+        backgroundEndActionLabel = "Delete entry",
+        backgroundCardEndColor = MaterialTheme.colorScheme.secondaryContainer,
+        backgroundCardStartColor = MaterialTheme.colorScheme.tertiaryContainer,
+        shape = MaterialTheme.shapes.medium,
+        card = { shape, content ->
+            Card(
+                modifier = Modifier.matchParentSize(),
+                colors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = Color.Transparent
+                ),
+                shape = shape,
+                content = content
+            )
+        }
     ) {
         Card(
             shape = it,
@@ -224,7 +335,21 @@ private fun ButtonRevealSwipe2() {
             Trash()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
-        backgroundEndActionLabel = "Delete entry"
+        backgroundEndActionLabel = "Delete entry",
+        backgroundCardEndColor = MaterialTheme.colorScheme.secondaryContainer,
+        backgroundCardStartColor = MaterialTheme.colorScheme.tertiaryContainer,
+        shape = MaterialTheme.shapes.medium,
+        card = { shape, content ->
+            Card(
+                modifier = Modifier.matchParentSize(),
+                colors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = Color.Transparent
+                ),
+                shape = shape,
+                content = content
+            )
+        }
     ) {
         Card(
             shape = it,
@@ -264,7 +389,21 @@ private fun TextFieldRevealSwipe() {
             Trash()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
-        backgroundEndActionLabel = "Delete entry"
+        backgroundEndActionLabel = "Delete entry",
+        backgroundCardEndColor = MaterialTheme.colorScheme.secondaryContainer,
+        backgroundCardStartColor = MaterialTheme.colorScheme.tertiaryContainer,
+        shape = MaterialTheme.shapes.medium,
+        card = { shape, content ->
+            Card(
+                modifier = Modifier.matchParentSize(),
+                colors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = Color.Transparent
+                ),
+                shape = shape,
+                content = content
+            )
+        }
     ) {
         Card(
             shape = it,
@@ -309,7 +448,21 @@ private fun ContentClickRevealSwipe() {
             Trash()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
-        backgroundEndActionLabel = "Delete entry"
+        backgroundEndActionLabel = "Delete entry",
+        backgroundCardEndColor = MaterialTheme.colorScheme.secondaryContainer,
+        backgroundCardStartColor = MaterialTheme.colorScheme.tertiaryContainer,
+        shape = MaterialTheme.shapes.medium,
+        card = { shape, content ->
+            Card(
+                modifier = Modifier.matchParentSize(),
+                colors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = Color.Transparent
+                ),
+                shape = shape,
+                content = content
+            )
+        }
     ) {
         Card(
             shape = it,
