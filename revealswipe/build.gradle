@@ -8,7 +8,7 @@ apply from: '../buildCompose.gradle'
 
 ext {
     PUBLISH_GROUP_ID = 'de.charlex.compose'
-    PUBLISH_VERSION = '2.1.0-alpha02'
+    PUBLISH_VERSION = '2.1.0-alpha03'
     PUBLISH_ARTIFACT_ID = 'revealswipe'
 }
 

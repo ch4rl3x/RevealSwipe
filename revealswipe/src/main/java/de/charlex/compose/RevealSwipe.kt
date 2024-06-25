@@ -468,7 +468,7 @@ fun rememberRevealState(
     positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
     velocityThreshold: (() -> Float)? = null,
     animationSpec: AnimationSpec<Float> = tween(),
-    decayAnimationSpec:DecayAnimationSpec<Float> = exponentialDecay(),
+//    decayAnimationSpec:DecayAnimationSpec<Float> = exponentialDecay(),
     confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ): RevealState {
     val density = LocalDensity.current
@@ -481,7 +481,7 @@ fun rememberRevealState(
             positionalThreshold = positionalThreshold,
             velocityThreshold = velocityThreshold ?: { with(density) { 100.dp.toPx() } },
             animationSpec = animationSpec,
-            decayAnimationSpec = decayAnimationSpec,
+//            decayAnimationSpec = decayAnimationSpec,
             confirmValueChange = confirmValueChange
         )
     }
@@ -496,7 +496,7 @@ data class RevealState(
     private val positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
     private val velocityThreshold: (() -> Float)? = null,
     private val animationSpec: AnimationSpec<Float> = tween(),
-    private val decayAnimationSpec: DecayAnimationSpec<Float>,
+//    private val decayAnimationSpec: DecayAnimationSpec<Float>,
     private val confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ) {
     @OptIn(ExperimentalFoundationApi::class)
@@ -509,8 +509,8 @@ data class RevealState(
         },
         positionalThreshold = positionalThreshold,
         velocityThreshold = velocityThreshold ?: { with(density) { 10.dp.toPx() } },
-        snapAnimationSpec = animationSpec,
-        decayAnimationSpec = decayAnimationSpec,
+        animationSpec = animationSpec,
+//        decayAnimationSpec = decayAnimationSpec,
         confirmValueChange = confirmValueChange
     )
 }

@@ -20,8 +20,8 @@ spotless = "6.23.0"
 
 [libraries]
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-compose-foundation-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
-compose-material3-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+compose-foundation-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-material3-material3 = { module = "androidx.compose.material3:material3" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-ui-ui = { module = "androidx.compose.ui:ui" }
