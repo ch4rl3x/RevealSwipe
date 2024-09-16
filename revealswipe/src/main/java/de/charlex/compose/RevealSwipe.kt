@@ -467,8 +467,8 @@ fun rememberRevealState(
     initialValue: RevealValue = RevealValue.Default,
     positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
     velocityThreshold: (() -> Float)? = null,
-    animationSpec: AnimationSpec<Float> = tween(),
-//    decayAnimationSpec:DecayAnimationSpec<Float> = exponentialDecay(),
+    snapAnimationSpec: AnimationSpec<Float> = tween(),
+    decayAnimationSpec:DecayAnimationSpec<Float> = exponentialDecay(),
     confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ): RevealState {
     val density = LocalDensity.current
@@ -480,8 +480,8 @@ fun rememberRevealState(
             initialValue = initialValue,
             positionalThreshold = positionalThreshold,
             velocityThreshold = velocityThreshold ?: { with(density) { 100.dp.toPx() } },
-            animationSpec = animationSpec,
-//            decayAnimationSpec = decayAnimationSpec,
+            snapAnimationSpec = snapAnimationSpec,
+            decayAnimationSpec = decayAnimationSpec,
             confirmValueChange = confirmValueChange
         )
     }
@@ -495,8 +495,8 @@ data class RevealState(
     private val initialValue: RevealValue = RevealValue.Default,
     private val positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
     private val velocityThreshold: (() -> Float)? = null,
-    private val animationSpec: AnimationSpec<Float> = tween(),
-//    private val decayAnimationSpec: DecayAnimationSpec<Float>,
+    private val snapAnimationSpec: AnimationSpec<Float> = tween(),
+    private val decayAnimationSpec: DecayAnimationSpec<Float>,
     private val confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ) {
     @OptIn(ExperimentalFoundationApi::class)
@@ -509,8 +509,8 @@ data class RevealState(
         },
         positionalThreshold = positionalThreshold,
         velocityThreshold = velocityThreshold ?: { with(density) { 10.dp.toPx() } },
-        animationSpec = animationSpec,
-//        decayAnimationSpec = decayAnimationSpec,
+        snapAnimationSpec = snapAnimationSpec,
+        decayAnimationSpec = decayAnimationSpec,
         confirmValueChange = confirmValueChange
     )
 }
