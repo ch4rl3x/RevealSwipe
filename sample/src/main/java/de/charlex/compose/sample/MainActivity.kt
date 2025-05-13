@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,13 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -120,10 +114,10 @@ fun RevealSamples(items: List<Item>) {
                 modifier = Modifier.padding(vertical = 5.dp),
                 state = rememberRevealState(directions = item.directions),
                 hiddenContentStart = {
-                    Star()
+                    SText()
                 },
                 hiddenContentEnd = {
-                    Trash()
+                    TText()
                 },
                 backgroundStartActionLabel = "Mark entry as favorite",
                 backgroundEndActionLabel = "Delete entry",
@@ -206,20 +200,20 @@ private fun BaseRevealSwipe() {
                         .fillMaxSize()
                         .weight(1f),
                     onClick = {
-                        Toast.makeText(context, "Star", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "S", Toast.LENGTH_SHORT).show()
                     }
                 ) {
-                    Star()
+                    SText()
                 }
                 IconButton(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f),
                     onClick = {
-                        Toast.makeText(context, "Trash", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "T", Toast.LENGTH_SHORT).show()
                     }
                 ) {
-                    Trash()
+                    TText()
                 }
             }
         },
@@ -273,10 +267,10 @@ private fun ButtonRevealSwipe() {
         onContentClick = null,
         modifier = Modifier.padding(vertical = 5.dp),
         hiddenContentStart = {
-            Star()
+            SText()
         },
         hiddenContentEnd = {
-            Trash()
+            TText()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
         backgroundEndActionLabel = "Delete entry",
@@ -329,10 +323,10 @@ private fun ButtonRevealSwipe2() {
         },
         modifier = Modifier.padding(vertical = 5.dp),
         hiddenContentStart = {
-            Star()
+            SText()
         },
         hiddenContentEnd = {
-            Trash()
+            TText()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
         backgroundEndActionLabel = "Delete entry",
@@ -383,10 +377,10 @@ private fun TextFieldRevealSwipe() {
     RevealSwipe(
         modifier = Modifier.padding(vertical = 5.dp),
         hiddenContentStart = {
-            Star()
+            SText()
         },
         hiddenContentEnd = {
-            Trash()
+            TText()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
         backgroundEndActionLabel = "Delete entry",
@@ -442,10 +436,10 @@ private fun ContentClickRevealSwipe() {
         closeOnContentClick = true,
         modifier = Modifier.padding(vertical = 5.dp),
         hiddenContentStart = {
-            Star()
+            SText()
         },
         hiddenContentEnd = {
-            Trash()
+            TText()
         },
         backgroundStartActionLabel = "Mark entry as favorite",
         backgroundEndActionLabel = "Delete entry",
@@ -487,21 +481,18 @@ private fun ContentClickRevealSwipe() {
 }
 
 @Composable
-private fun Trash() {
-    Icon(
+private fun TText() {
+    Text(
         modifier = Modifier.padding(horizontal = 25.dp),
-        imageVector = Icons.Outlined.Delete,
-        contentDescription = null
+        text = "T"
     )
 }
 
 @Composable
-private fun Star() {
-    Icon(
+private fun SText() {
+    Text(
         modifier = Modifier.padding(horizontal = 25.dp),
-        imageVector = Icons.Outlined.Star,
-        contentDescription = null,
-        tint = Color.White
+        text = "S"
     )
 }
 

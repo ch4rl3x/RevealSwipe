@@ -1,18 +1,17 @@
 package de.charlex.compose
 
 
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
@@ -20,10 +19,22 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -265,9 +276,14 @@ fun BaseRevealSwipe(
             RevealDirection.EndToStart
         )
     ),
+    flingBehavior: FlingBehavior? = AnchoredDraggableDefaults.flingBehavior(
+        state = state.anchoredDraggableState,
+        positionalThreshold = { distance: Float -> distance * 0.5f },
+        animationSpec = tween()
+    ),
     hiddenContentEnd: @Composable BoxScope.() -> Unit = {},
     hiddenContentStart: @Composable BoxScope.() -> Unit = {},
-    content: @Composable (Shape) -> Unit
+    content: @Composable BoxScope.(Shape) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -375,7 +391,7 @@ fun BaseRevealSwipe(
             }
         }
 
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .then(
                     if (enableSwipe)
@@ -392,21 +408,23 @@ fun BaseRevealSwipe(
                                 state = state.anchoredDraggableState,
                                 orientation = Orientation.Horizontal,
                                 enabled = true, // state.value == RevealValue.Default,
-                                reverseDirection = LocalLayoutDirection.current == LayoutDirection.Rtl
+                                reverseDirection = LocalLayoutDirection.current == LayoutDirection.Rtl,
+                                flingBehavior = flingBehavior
                             )
                     else Modifier
                 )
         ) {
+            shapeSize = Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
+
             content(animatedShape)
         }
 
-        // This box is used to determine shape size.
-        // The box is sized to match it's parent, which in turn is sized according to its first child - the card.
-        BoxWithConstraints(
-            modifier = Modifier.matchParentSize()
-        ) {
-            shapeSize = Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
-        }
+//        // This box is used to determine shape size.
+//        // The box is sized to match it's parent, which in turn is sized according to its first child - the card.
+//        BoxWithConstraints(
+//            modifier = Modifier.matchParentSize()
+//        ) {
+//        }
     }
 }
 
@@ -454,19 +472,11 @@ enum class RevealValue {
 /**
  * Create and [remember] a [RevealState] with the default animation clock.
  *
- * @param initialValue The initial value of the state.
- * @param confirmStateChange Optional callback invoked to confirm or veto a pending state change.
  */
 @Composable
 fun rememberRevealState(
     maxRevealDp: Dp = 75.dp,
     directions: Set<RevealDirection> = setOf(RevealDirection.StartToEnd, RevealDirection.EndToStart),
-    initialValue: RevealValue = RevealValue.Default,
-    positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
-    velocityThreshold: (() -> Float)? = null,
-    snapAnimationSpec: AnimationSpec<Float> = tween(),
-    decayAnimationSpec:DecayAnimationSpec<Float> = exponentialDecay(),
-    confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ): RevealState {
     val density = LocalDensity.current
     return remember {
@@ -474,12 +484,6 @@ fun rememberRevealState(
             maxRevealDp = maxRevealDp,
             directions = directions,
             density = density,
-            initialValue = initialValue,
-            positionalThreshold = positionalThreshold,
-            velocityThreshold = velocityThreshold ?: { with(density) { 100.dp.toPx() } },
-            snapAnimationSpec = snapAnimationSpec,
-            decayAnimationSpec = decayAnimationSpec,
-            confirmValueChange = confirmValueChange
         )
     }
 }
@@ -489,12 +493,8 @@ data class RevealState(
     val directions: Set<RevealDirection>,
     private val density: Density,
     private val initialValue: RevealValue = RevealValue.Default,
-    private val positionalThreshold: (totalDistance: Float) -> Float = { distance: Float -> distance * 0.5f },
-    private val velocityThreshold: (() -> Float)? = null,
-    private val snapAnimationSpec: AnimationSpec<Float> = tween(),
-    private val decayAnimationSpec: DecayAnimationSpec<Float>,
-    private val confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ) {
+
     val anchoredDraggableState: AnchoredDraggableState<RevealValue> = AnchoredDraggableState(
         initialValue = initialValue,
         anchors = DraggableAnchors {
@@ -502,11 +502,6 @@ data class RevealState(
             if (RevealDirection.StartToEnd in directions) RevealValue.FullyRevealedEnd at with(density) { maxRevealDp.toPx() }
             if (RevealDirection.EndToStart in directions) RevealValue.FullyRevealedStart at -with(density) { maxRevealDp.toPx() }
         },
-        positionalThreshold = positionalThreshold,
-        velocityThreshold = velocityThreshold ?: { with(density) { 10.dp.toPx() } },
-        snapAnimationSpec = snapAnimationSpec,
-        decayAnimationSpec = decayAnimationSpec,
-        confirmValueChange = confirmValueChange
     )
 }
 
