@@ -2,13 +2,14 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     alias libs.plugins.spotless
+    alias libs.plugins.compose.compiler
 }
 
 apply from: '../buildCompose.gradle'
 
 ext {
     PUBLISH_GROUP_ID = 'de.charlex.compose'
-    PUBLISH_VERSION = '2.2.0'
+    PUBLISH_VERSION = '2.3.0'
     PUBLISH_ARTIFACT_ID = 'revealswipe'
 }
 

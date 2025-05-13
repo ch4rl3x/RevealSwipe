@@ -1,22 +1,21 @@
 [versions]
-compileSdk = "34"
+compileSdk = "35"
 gradleNexusStagingPlugin = "0.30.0"
 minSdk = "21"
-targetSdk = "34"
+targetSdk = "35"
 ktlint = "0.42.1"
 
-composeBom = "2024.09.01" # https://developer.android.com/jetpack/compose/bom/bom-mapping
-composeCompiler = "1.5.11" # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-kotlin = "1.9.23" # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+composeBom = "2025.05.00" # https://developer.android.com/jetpack/compose/bom/bom-mapping
+kotlin = "2.1.20" # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 gradlePlugin = "8.1.4" # https://developer.android.com/build/releases/gradle-plugin
 
 foundation = "1.7.0-beta03"
 material3 = "1.3.0-beta03"
 
-activityComposeVersion = "1.9.2"
+activityComposeVersion = "1.10.1"
 lifecycleRuntimeKtxVersion = "2.8.5"
 
-spotless = "6.23.0"
+spotless = "7.0.2"
 
 [libraries]
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
@@ -35,3 +34,4 @@ lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", v
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 nexus-staging = { id = 'io.codearte.nexus-staging', version.ref = "gradleNexusStagingPlugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

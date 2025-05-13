@@ -7,7 +7,6 @@ import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,7 +51,6 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RevealSwipe(
     modifier: Modifier = Modifier,
@@ -247,7 +245,6 @@ fun RevealSwipe(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BaseRevealSwipe(
     modifier: Modifier = Modifier,
@@ -487,7 +484,6 @@ fun rememberRevealState(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 data class RevealState(
     val maxRevealDp: Dp = 75.dp,
     val directions: Set<RevealDirection>,
@@ -499,7 +495,6 @@ data class RevealState(
     private val decayAnimationSpec: DecayAnimationSpec<Float>,
     private val confirmValueChange: (newValue: RevealValue) -> Boolean = { true }
 ) {
-    @OptIn(ExperimentalFoundationApi::class)
     val anchoredDraggableState: AnchoredDraggableState<RevealValue> = AnchoredDraggableState(
         initialValue = initialValue,
         anchors = DraggableAnchors {
@@ -518,7 +513,6 @@ data class RevealState(
 /**
  * Reset the component to the default position, with an animation.
  */
-@OptIn(ExperimentalFoundationApi::class)
 suspend fun RevealState.reset() {
     anchoredDraggableState.animateTo(
         targetValue = RevealValue.Default,
@@ -528,7 +522,6 @@ suspend fun RevealState.reset() {
 /**
  * Reset the component to the default position, with an animation.
  */
-@OptIn(ExperimentalFoundationApi::class)
 suspend fun RevealState.resetFast() {
     anchoredDraggableState.snapTo(
         targetValue = RevealValue.Default,
