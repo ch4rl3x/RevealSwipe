@@ -20,7 +20,7 @@
 * Works natively with Material 3 styling and theming.
 
 
-## Add to your project
+## Dependency
 
 Add actual RevealSwipe library:
 
