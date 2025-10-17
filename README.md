@@ -6,16 +6,22 @@
 
 
 # RevealSwipe
-Compose Multiplatform - RevealSwipe (Material 3)
 
-Swipable in both directions
-
+RevealSwipe is a Compose UI component library built for swipe-to-reveal interactions. With this library, you can wrap content and reveal hidden composables (e.g. action icons) when swiping left or right.
 
 > [!NOTE]  
 > 🚀 RevealSwipe is now Compose Multiplatform
 
+🧩 What it does
 
-# Add to your project
+* You can configure swipe directions (start → end, end → start).
+* For each direction, you can supply hidden content (e.g. an icon, button, or any composable).
+* The main content (your card, list item, etc.) slides over to reveal the hidden content beneath.
+* You remain in control over layout, styling, and when/if the reveal should trigger for a full swipe or partial swipe.
+* Works natively with Material 3 styling and theming.
+
+
+## Add to your project
 
 Add actual RevealSwipe library:
 
@@ -25,7 +31,7 @@ dependencies {
 }
 ```
 
-# How does it work?
+## How does it work?
 
 Surround your content with the RevealSwipe
 
@@ -65,12 +71,10 @@ RevealSwipe(
 }
 ```
 
-# Preview
+## Preview
 
 ![RevealSwipe](https://github.com/ch4rl3x/RevealSwipe/blob/main/art/revealswipe.gif)
 
-
-That's it!
 
 License
 --------
