@@ -16,12 +16,13 @@ import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import groovy.util.Node
 import javax.inject.Inject
 
 
 class MavenCentralPublishConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
-        val extension = target.extensions.create(
+        val extension = extensions.create(
             "mavenPublishConfig",
             MavenPublishExtension::class.java
         )
@@ -46,31 +47,40 @@ class MavenCentralPublishConventionPlugin : Plugin<Project> {
         }
 
         extensions.configure<PublishingExtension> {
-            publications.withType<MavenPublication> {
+            publications.withType<MavenPublication>().configureEach {
                 artifact(javadocJar)
                 pom {
-                    name.set(extension.name ?: project.name)
-                    description.set(extension.description ?: project.description)
-                    url.set(extension.url ?: "https://github.com/ch4rl3x/${project.name}")
+                    name.set(project.provider { extension.name ?: project.name })
+                    description.set(project.provider { extension.description ?: project.description })
+                    url.set(project.provider { extension.url ?: "https://github.com/ch4rl3x/${project.name}" })
 
                     licenses {
                         license {
                             name.set("Apache-2.0 License")
                             url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                         }
-                        developers {
+                    }
+
+                    scm {
+                        connection.set(project.provider { extension.scm.connection })
+                        developerConnection.set(project.provider { extension.scm.developerConnection })
+                        url.set(project.provider { extension.scm.url })
+                    }
+
+                    withXml {
+                        if (extension.developers.isNotEmpty()) {
+                            val root = asNode()
+                            // Prüfen ob bereits ein developers-Knoten existiert
+                            val existing = root.children().firstOrNull { child ->
+                                child is Node && child.name() == "developers"
+                            } as Node?
+                            val devsNode = existing ?: root.appendNode("developers")
                             extension.developers.forEach { dev ->
-                                developer {
-                                    id.set(dev.id)
-                                    name.set(dev.name)
-                                    email.set(dev.email)
-                                }
+                                val devNode = devsNode.appendNode("developer")
+                                dev.id?.let { devNode.appendNode("id", it) }
+                                dev.name?.let { devNode.appendNode("name", it) }
+                                dev.email?.let { devNode.appendNode("email", it) }
                             }
-                        }
-                        scm {
-                            connection.set(extension.scm.connection)
-                            developerConnection.set(extension.scm.developerConnection)
-                            url.set(extension.scm.url)
                         }
                     }
                 }
