@@ -1,0 +1,19 @@
+name: Build
+description: Build
+
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/workflows/actions/prepare
+
+    - name: Build library
+      shell: bash
+      run: ./gradlew assembleRelease
+
+    - name: Build sample apps
+      shell: bash
+      run: ./gradlew -p example assembleRelease
+
+    - name: Build dokka
+      shell: bash
+      run: ./gradlew dokkaGeneratePublicationHtml

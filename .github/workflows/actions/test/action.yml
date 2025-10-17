@@ -1,0 +1,27 @@
+name: Test
+description: Test
+
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/workflows/actions/prepare
+
+    - name: Test library
+      shell: bash
+      run: ./gradlew check
+
+    - name: Report JVM Tests
+      uses: dorny/test-reporter@v1.7.0
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: JVM Tests
+        path: '*/build/test-results/*jvm*/TEST-*.xml'    # Path to test results
+        reporter: java-junit        # Format of test results
+
+    - name: Report iOS Tests
+      uses: dorny/test-reporter@v1.7.0
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: iOS Tests            # Name of the check run which will be created
+        path: '*/build/test-results/*ios*/TEST-*.xml'    # Path to test results
+        reporter: java-junit        # Format of test results

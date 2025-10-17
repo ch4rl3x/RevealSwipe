@@ -1,0 +1,17 @@
+name: Build
+description: Build
+
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/workflows/actions/prepare
+
+    - name: Build dokka
+      shell: bash
+      run: ./gradlew dokkaGeneratePublicationHtml
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: compose-cache-dokka
+        path: build/dokka/htmlCollector/
+        retention-days: 1

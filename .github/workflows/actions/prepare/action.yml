@@ -1,0 +1,35 @@
+name: Prepare
+description: Prepare
+
+runs:
+  using: "composite"
+  steps:
+    - uses: gradle/wrapper-validation-action@v2
+
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches/modules-*
+          ~/.gradle/caches/jars-*
+          ~/.gradle/caches/build-cache-*
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/build.gradle.kts') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
+    - name: set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      shell: bash
+      run: chmod +x gradlew
+
+    - name: Select Xcode Version
+      uses: mobiledevops/xcode-select-version-action@v1
+      with:
+        xcode-select-version: 15.0.1
+
+    - name: show Xcode version
+      shell: bash
+      run: xcodebuild -version
