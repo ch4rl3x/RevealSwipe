@@ -4,10 +4,9 @@
 <a href="https://www.codefactor.io/repository/github/ch4rl3x/RevealSwipe"><img src="https://www.codefactor.io/repository/github/ch4rl3x/RevealSwipe/badge" alt="CodeFactor" /></a>
 <a href="https://repo1.maven.org/maven2/de/charlex/compose/revealswipe/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose/revealswipe" alt="Maven Central" /></a>
 
-
 # RevealSwipe
 
-RevealSwipe is a Compose UI component library built for swipe-to-reveal interactions. With this library, you can wrap content and reveal hidden composables (e.g. action icons) when swiping left or right.
+`RevealSwipe` is a Compose UI component library built for swipe-to-reveal interactions. With this library, you can wrap content and reveal hidden composables (e.g. action icons) when swiping left or right.
 
 > [!NOTE]  
 > 🚀 RevealSwipe is now Compose Multiplatform
