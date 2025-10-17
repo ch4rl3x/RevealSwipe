@@ -9,7 +9,7 @@ minSdk = "21"
 compose-multiplatform = "1.9.0"
 
 kotlin = "2.2.20" # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-agp = "8.11.2" # https://developer.android.com/build/releases/gradle-plugin
+agp = "8.13.0" # https://developer.android.com/build/releases/gradle-plugin
 
 androidxActivity = "1.11.0"
 coreKtx = "1.17.0"
