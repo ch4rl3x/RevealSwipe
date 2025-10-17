@@ -11,6 +11,10 @@ plugins {
     alias(libs.plugins.nexusPublish)
 }
 
+subprojects {
+    group = "de.charlex.compose"
+}
+
 nexusPublishing {
     repositories {
         sonatype {
